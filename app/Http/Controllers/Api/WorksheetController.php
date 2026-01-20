@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorksheetStoreRequest;
+use App\Http\Resources\WorksheetResource;
 use App\Models\User;
+use App\Models\Worksheet;
 
 class WorksheetController extends Controller
 {
@@ -33,6 +35,8 @@ class WorksheetController extends Controller
             'user_id' => $user->id,
         ];
 
-        return response()->json(['message' => 'List of PDFs']);
+        $worksheet = Worksheet::create($data);
+
+        return response()->json(new WorksheetResource($worksheet), 201);
     }
 }
