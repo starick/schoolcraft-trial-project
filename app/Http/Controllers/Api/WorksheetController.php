@@ -7,19 +7,18 @@ use App\Http\Requests\WorksheetStoreRequest;
 use App\Http\Resources\WorksheetResource;
 use App\Models\User;
 use App\Models\Worksheet;
+use App\Services\JWTService;
 
 class WorksheetController extends Controller
 {
-    public function store(WorksheetStoreRequest $request)
+    public function store(WorksheetStoreRequest $request, JWTService $jwtService)
     {
         $validated = $request->validated();
-        // /** @var User $user */
-        // $user = auth()->user();
+        $jwtContent = $jwtService->decode($request->bearerToken());
 
-        // TODO get JWT email and compare with request email (service)
-        $jwtEmail = 'asdasd';
+        abort_unless($jwtContent['email'] === $validated['email'], 403, 'Emails do not match.');
 
-        abort_unless($jwtEmail === $validated['email'], 403, 'Emails do not match.');
+        abort_unless($jwtContent['scope'] === 'share:worksheet', 403, 'Invalid token scope.');
 
         $file = $request->file('file');
         $filePath = $file->store('worksheets', 'private');
