@@ -10,4 +10,8 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-require __DIR__.'/settings.php';
+Route::group(['prefix' => 'worksheets', 'as' => 'worksheet.'], function () {
+    Route::livewire('/', 'pages::worksheet.index')->name('index');
+});
+
+require __DIR__ . '/settings.php';

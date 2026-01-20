@@ -17,7 +17,10 @@ class WorksheetFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->paragraph,
+            'file_path' => 'worksheets/' . $this->faker->uuid . '.pdf',
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }
