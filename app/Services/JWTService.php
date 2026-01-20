@@ -14,13 +14,11 @@ class JWTService
         return json_encode($decoded);
     }
 
-    public function getEmail(string $jwt): string
+    public function isValid($jwt): bool
     {
-        return $this->decode($jwt)['email'] ?? null;
-    }
-
-    public function isValid(string $jwt): bool
-    {
+        if (is_string($jwt) === false || empty($jwt)) {
+            return false;
+        }
         try {
             $this->decode($jwt);
             return true;
