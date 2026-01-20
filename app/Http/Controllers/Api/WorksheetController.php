@@ -20,21 +20,19 @@ class WorksheetController extends Controller
 
         abort_unless($jwtContent['scope'] === 'share:worksheet', 403, 'Invalid token scope.');
 
-        $file = $request->file('file');
+        $file = $validated['file'];
         $filePath = $file->store('worksheets', 'private');
 
         $user = User::firstOrCreate(
             ['email' => $validated['email']],
         );
 
-        $data = [
+        $worksheet = Worksheet::create([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'file_path' => $filePath,
             'user_id' => $user->id,
-        ];
-
-        $worksheet = Worksheet::create($data);
+        ]);
 
         return response()->json(new WorksheetResource($worksheet), 201);
     }
