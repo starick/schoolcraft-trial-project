@@ -16,15 +16,20 @@ class WorksheetController extends Controller
         $validated = $request->validated();
         $jwtContent = $jwtService->decode($request->bearerToken());
 
-        abort_unless($jwtContent['email'] === $validated['email'], 403, 'Emails do not match.');
+        // dd($jwtContent, $validated);
+        abort_unless($jwtContent->email === $validated['email'], 403, 'Emails do not match.');
 
-        abort_unless($jwtContent['scope'] === 'share:worksheet', 403, 'Invalid token scope.');
+        abort_unless($jwtContent->scope === 'share:worksheet', 403, 'Invalid token scope.');
 
         $file = $validated['file'];
         $filePath = $file->store('worksheets', 'private');
 
         $user = User::firstOrCreate(
-            ['email' => $validated['email']],
+            [
+                'email' => $validated['email'],
+                'name' => $validated['email'],
+                'password' => bcrypt(str()->random(16))
+                ],
         );
 
         $worksheet = Worksheet::create([

@@ -8,10 +8,10 @@ use Firebase\JWT\Key;
 
 class JWTService
 {
-    public function decode(string $jwt): string
+    public function decode(string $jwt)
     {
         $decoded = JWT::decode($jwt, JWK::parseKey(config('jwt.public')));
-        return json_encode($decoded);
+        return $decoded;
     }
 
     public function isValid($jwt): bool
